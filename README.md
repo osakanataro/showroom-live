@@ -20,12 +20,12 @@ Windows環境で使う場合は、showroom-live-ringo_kujo.bat に示したよ�
 ## 使い方
 #### 配信が始まったらVLCが起動して視聴を開始する
 ~~~
-showroom-live.ps1 配信者ROOMURL
+showroom-live.ps1 -roomurl 配信者ROOMURL
 ~~~
 
 #### 配信が始まったら画面には出さずファイルに保存する
 ~~~
-showroom-live.ps1 配信者ROOMURL -output -outdir "出力先ディレクトリ"
+showroom-live.ps1 -roomurl 配信者ROOMURL -output -outdir "出力先ディレクトリ"
 ~~~
 ファイル名はROOMIDに日時をつけたものを自動生成します。
 なお、ルーム名にしていないのは、ファイル名にできない文字列をルーム名に指定していることが多いためです。
