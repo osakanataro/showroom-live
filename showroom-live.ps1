@@ -63,6 +63,11 @@ $tmped=($response.Content).IndexOf("`"",$tmpst)
 $livetitle=($response.Content).Substring($tmpst,$tmped-$tmpst)
 Write-Host $livetitle
 
+### Windowタイトルにroomtitleを表示
+if([Environment]::OSVersion.Platform -eq "Win32NT"){
+    $Host.ui.RawUI.WindowTitle="showroom-live:"+$livetitle
+}
+
 $onlivecheckurl="https://www.showroom-live.com/room/is_live?room_id="+$roomid
 $liveurl="https://www.showroom-live.com/room/get_live_data?room_id="+$roomid
 
