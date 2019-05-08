@@ -23,6 +23,11 @@ Windows環境で使う場合は、showroom-live-ringo_kujo.bat に示したよ�
 showroom-live.ps1 -roomurl 配信者ROOMURL
 ~~~
 
+#### 配信が始まったらVLCを起動して視聴しつつファイルにも保存する
+~~~
+showroom-live.ps1 -roomurl 配信者ROOMURL -record -outdir "出力先ディレクトリ"
+~~~
+
 #### 配信が始まったら画面には出さずファイルに保存する
 ~~~
 showroom-live.ps1 -roomurl 配信者ROOMURL -output -outdir "出力先ディレクトリ"
