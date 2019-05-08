@@ -6,7 +6,8 @@ param(
     [string]$streamlinkcmd="streamlink",
     [string]$quolity="best",
     [switch]$record,
-    [switch]$output
+    [switch]$output,
+    [int32]$wait=10
 )
 
 ### CLI操作整備時に「streamlinkrecorddirectory」だと長すぎたのでoutdirで短縮
@@ -74,13 +75,19 @@ $liveurl="https://www.showroom-live.com/room/get_live_data?room_id="+$roomid
 ### 配信開始チェック。未配信の場合は待機
 # JSON形式で「ok」が「1」なら配信中。「0」だと未配信
 $flag=0
+$count=0
 while ($flag -eq 0){
     $responsejson=Invoke-RestMethod $onlivecheckurl
     if( ($responsejson | Select-Object -ExpandProperty ok) -ne 1){
         Write-Host "." -NoNewline
-        Start-Sleep -Seconds 10
+        Start-Sleep -Seconds $wait
     }else{
         $flag=1
+    }
+    # 3時間毎に改行し、コンソールにタイトル表示もしておく
+    if( $cound -gt (3600 * 3 / $wait )){
+    	Write-Host ""
+	Write-Host $livetitle
     }
 }
 Write-Host ""
