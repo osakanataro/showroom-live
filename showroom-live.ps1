@@ -84,10 +84,11 @@ while ($flag -eq 0){
     }else{
         $flag=1
     }
-    # 3時間毎に改行し、コンソールにタイトル表示もしておく
-    if( $count -gt (3600 * 3 / $wait )){
+    # 2時間毎に改行し、コンソールにタイトル表示もしておく
+    if( $count -gt (3600 * 2 / $wait )){
     	Write-Host ""
 	Write-Host $livetitle
+	$count=0
     }
     $count++
 }
