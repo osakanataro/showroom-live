@@ -17,6 +17,8 @@ Windows環境で使う場合は、showroom-live-ringo_kujo.bat に示したよ�
 視聴する場合に追加で必要
 [VLC](https://www.videolan.org/)
 
+PowerShellもしくはPowerShell Coreがインストールされていること
+
 ## 使い方
 #### 配信が始まったらVLCが起動して視聴を開始する
 ~~~
@@ -37,6 +39,11 @@ showroom-live.ps1 -roomurl 配信者ROOMURL -output -outdir "出力先ディレ�
 
 "-outdir"オプションをつけない場合、Windows環境ではマイビデオ、Linux環境では~/Video/ (RHEL7風)に出力します。
 指定したディレクトリが存在しない場合の処理については実装していません。
+
+#### Windows 10環境での注意点
+Windows10の標準設定ではps1ファイルの直接実行が禁止されていることがあります。
+その場合は設定を変更するのではなく、powershellを「-sta -ExecutionPolicy Unrestricted」オプション付きで実行することで回避できるようになります。
+わざわざオプションを毎回変更するは面倒なので、showroom-live-ringo_kujo.bat のような感じでバッチファイルを作って、それを実行するのが簡単でしょう。
 
 ## 使い方の応用
 VLCには "--sout"オプションというものがあり、受信したデータを再送信する機能があります。
