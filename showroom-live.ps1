@@ -71,6 +71,7 @@ if([Environment]::OSVersion.Platform -eq "Win32NT"){
 
 $onlivecheckurl="https://www.showroom-live.com/room/is_live?room_id="+$roomid
 $liveurl="https://www.showroom-live.com/room/get_live_data?room_id="+$roomid
+$streamcheckurl="https://www.showroom-live.com/api/live/streaming_url?room_id="+$roomid
 
 ### 配信開始チェック。未配信の場合は待機
 # JSON形式で「ok」が「1」なら配信中。「0」だと未配信
@@ -104,10 +105,14 @@ Write-Host ""
 #$liveurl=($response.Content).Substring($tmpst,$tmped-$tmpst)
 #$streamtypes=""
 
+### 2019/10/10のシステム変更対応
+$responsejson=Invoke-RestMethod $streamcheckurl
+$liveurl=($responsejson|select-object -ExpandProperty streaming_url_list | Where-Object { $_.type -match "hls" }|Sort-Object quality |Select-Object -last 1).url
+
 # streamlinkに「--stream-types hls」を指定すると、HLS形式で取得できる
 # このオプションを指定しない場合、FlashVideo形式で取得される可能性がある
 $streamtypes="--stream-types=hls"
-$liveurl=$roomurl
+#$liveurl=$roomurl
 
 ### ファイル名決定
 # ParsedHtml はWindows環境のみ対応なのでContentを検索する手法に変更
