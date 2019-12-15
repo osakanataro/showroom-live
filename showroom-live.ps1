@@ -12,6 +12,10 @@ param(
 
 ### CLI操作整備時に「streamlinkrecorddirectory」だと長すぎたのでoutdirで短縮
 $streamlinkrecorddirectory=$outdir
+if ( !(Test-Path -Path $outdir)){
+    Write-Host "Not found path: $outdir"
+    exit
+}
 
 ### URLのサンプル
 #$roomurl="https://www.showroom-live.com/ringo-005"   # 九条林檎
