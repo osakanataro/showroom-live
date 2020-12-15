@@ -4,7 +4,7 @@ param(
     #[string]$streamlinkrecorddirectory="~/Videos",
     [string]$outdir="~/Videos",
     [string]$streamlinkcmd="streamlink",
-    [string]$quolity="best",
+    [string]$quality="best",
     [switch]$record,
     [switch]$output,
     [int32]$wait=10
@@ -37,8 +37,8 @@ if([Environment]::OSVersion.Platform -eq "Win32NT"){
 }
 
 ### 画質設定
-#$quolity="worst"                # 低画質
-#$quolity="best"                 # 高画質
+#$quality="worst"                # 低画質
+#$quality="best"                 # 高画質
 #このほか、配信者の送信設定により144p,360p,720p.1080pなどの画質設定がある
 #また、後述するが設定によりFlashVideoデータとMPEG-TSデータが取得出来る
 
@@ -132,23 +132,23 @@ $streamtypes="--stream-types=hls"
 # なお、FlashVideoの拡張子は.flv
 $datestr=Get-Date -Format "yyyyMMdd-HHmm"
 if([Environment]::OSVersion.Platform -eq "Win32NT"){
-    $streamlinkfilename=$streamlinkrecorddirectory+"\"+$roomid+"_"+$datestr+"_"+$quolity+".mpg"
+    $streamlinkfilename=$streamlinkrecorddirectory+"\"+$roomid+"_"+$datestr+"_"+$quality+".mpg"
 }else{
-    $streamlinkfilename=$streamlinkrecorddirectory+"/"+$roomid+"_"+$datestr+"_"+$quolity+".mpg"
+    $streamlinkfilename=$streamlinkrecorddirectory+"/"+$roomid+"_"+$datestr+"_"+$quality+".mpg"
 }
 
 ### streamlink コマンド実行
 # Windowsの場合、Start-process だとコンソール出力の結果を同じ窓に出力することができなかったため、cmdで実行
 if ($streamlinkoption -eq ""){
     if([Environment]::OSVersion.Platform -eq "Win32NT"){
-        cmd /c $streamlinkcmd $streamtypes $liveurl $quolity
+        cmd /c $streamlinkcmd $streamtypes $liveurl $quality
     }else{
-        Start-Process -FilePath $streamlinkcmd -ArgumentList $streamtypes,$liveurl,$quolity -Wait -PassThru -NoNewWindow
+        Start-Process -FilePath $streamlinkcmd -ArgumentList $streamtypes,$liveurl,$quality -Wait -PassThru -NoNewWindow
     }
 }else{
     if([Environment]::OSVersion.Platform -eq "Win32NT"){
-        cmd /c $streamlinkcmd $streamtypes $liveurl $quolity $streamlinkoption $streamlinkfilename
+        cmd /c $streamlinkcmd $streamtypes $liveurl $quality $streamlinkoption $streamlinkfilename
     }else{
-        Start-Process -FilePath $streamlinkcmd -ArgumentList $streamtypes,$liveurl,$quolity,$streamlinkoption,$streamlinkfilename -Wait -PassThru -NoNewWindow
+        Start-Process -FilePath $streamlinkcmd -ArgumentList $streamtypes,$liveurl,$quality,$streamlinkoption,$streamlinkfilename -Wait -PassThru -NoNewWindow
     }
 }
