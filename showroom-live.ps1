@@ -111,7 +111,7 @@ Write-Host ""
 
 ### 2019/10/10のシステム変更対応
 $responsejson=Invoke-RestMethod $streamcheckurl
-$liveurl=($responsejson|select-object -ExpandProperty streaming_url_list | Where-Object { $_.type -match "hls" }|Sort-Object quality |Select-Object -last 1).url
+$liveurl=($responsejson|select-object -ExpandProperty streaming_url_list | Where-Object { $_.type -match "^hls$" }|Sort-Object quality |Select-Object -last 1).url
 
 # streamlinkに「--stream-types hls」を指定すると、HLS形式で取得できる
 # このオプションを指定しない場合、FlashVideo形式で取得される可能性がある
