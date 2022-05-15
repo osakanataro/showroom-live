@@ -56,8 +56,9 @@ $response=Invoke-WebRequest $roomurl
 # 当初は ParsedHtml で実装したがWindows環境のみ対応なのでContentを検索する手法に変更
 #$roomidtmp=$response.ParsedHtml.getElementsByName("twitter:app:url:googleplay") | Select-Object -ExpandProperty content
 #$roomid=$roomidtmp.Substring($roomidtmp.IndexOf("=")+1)
-$tmpst=($response.Content).IndexOf("twitter:app:url:googleplay")
-$tmpst=($response.Content).IndexOf("room_id=",$tmpst)+("room_id=").Length
+#$tmpst=($response.Content).IndexOf("twitter:app:url:googleplay")
+#$tmpst=($response.Content).IndexOf("room_id=",$tmpst)+("room_id=").Length
+$tmpst=($response.Content).IndexOf("room_id=")+("room_id=").Length
 $tmped=($response.Content).IndexOf("`"",$tmpst)
 $roomid=($response.Content).Substring($tmpst,$tmped-$tmpst)
 
