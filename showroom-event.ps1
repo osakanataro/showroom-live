@@ -90,7 +90,7 @@ while ($loop -eq 0){
                 # 配信開始したらブラウザを開く
                 Start-Process $onliveurl
                 # 配信開始したらstreamlinkで保存を開始
-                #Start-Process -FilePath "streamlink" -ArgumentList $onliveurl,$quality,"--output",$outputfile
+                #Start-Process -FilePath $streamlinkcmd -ArgumentList $onliveurl,$quality,"--output",$outputfile
             }else{
                 # ロックファイル更新
                 $newfile=New-Item -ItemType File -force $lockfile
