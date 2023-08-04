@@ -10,17 +10,17 @@ param(
 
 #$eventurl="https://www.showroom-live.com/event/beginner_official_vol67"
 
-if ( !(Test-Path -Path $outdir)){
-    Write-Host "Not found path: $outdir"
-    exit
-}
-
 if([Environment]::OSVersion.Platform -eq "Win32NT"){
     if($outdir.IndexOf("/") -ne -1){
         $outdir=[Environment]::GetFolderPath("MyVideo")
     }
     # Windowsでstreamlink連携が上手くいかない場合に↓を使用
     #$streamlinkcmd="C:\Program Files (x86)\Streamlink\bin\streamlink.exe"
+}
+
+if ( !(Test-Path -Path $outdir)){
+    Write-Host "Not found path: $outdir"
+    exit
 }
 
 ### 画質設定
@@ -32,13 +32,24 @@ if([Environment]::OSVersion.Platform -eq "Win32NT"){
 
 ### ループ
 $loop=0
+$count=0
 while ($loop -eq 0){
     # ロックファイル検出用にスクリプト開始時刻を取得
     $scriptstartdate = Get-Date
     
     ### 現在配信中のROOM検出
     $response=Invoke-WebRequest $eventurl
-
+    
+    # イベント名取得
+    $tmpst=($response.Content).IndexOf("`"tx-title");
+    $tmpst=($response.Content).IndexOf(">",$tmpst)+(">").Length
+    $tmped=($response.Content).IndexOf("<",$tmpst)
+    $eventtitle=($response.Content).Substring($tmpst,$tmped-$tmpst)
+    # 進捗表示1
+    if($count -eq 0){
+        Write-Host $eventtitle
+    }
+    
     # 配信中のリンクには  class="ga-onlive-click" が含まれる
     $flag=0
     $tmpst=0
@@ -74,7 +85,7 @@ while ($loop -eq 0){
                 # 配信開始検出とロックファイル作成
                 $newfile=New-Item -ItemType File $lockfile
                 $onliveurl="https://www.showroom-live.com"+$onliveurl
-                Write-Host "*** 配信開始検出 $onlivetitle URL:$onliveurl 開始時刻:$onlivetime"
+                Write-Host "*** 配信開始検出 $onlivetitle $onliveurl 開始時刻 $onlivetime"
                 # 配信開始したらブラウザを開く
                 Start-Process $onliveurl
                 # 配信開始したらstreamlinkで保存を開始
@@ -94,6 +105,13 @@ while ($loop -eq 0){
             Remove-Item -Path $fileitem
         }
     }
-
+    
+    # 進捗表示2
+    Write-Host "." -NoNewline
+    $count++
+    if($count -gt 24 ){
+        Write-Host ""
+        $count=0
+    }
     Start-Sleep $wait
 }
