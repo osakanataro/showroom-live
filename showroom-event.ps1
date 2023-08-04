@@ -80,10 +80,11 @@ while ($loop -eq 0){
             $datestr=Get-Date -Format "yyyyMMdd-HHmm"
             $outputfile=$outdir+"/"+$tmp+"-"+$datestr+".mp4"
 
-            Write-Host "$onlivetitle $onliveurl $onlivetime"
+            #Write-Host "$onlivetitle $onliveurl $onlivetime"
             if(!(Test-Path $lockfile)){
                 # 配信開始検出とロックファイル作成
                 $newfile=New-Item -ItemType File $lockfile
+                $tmpout=Add-Content -PassThru $lockfile -Value $onlivetitle
                 $onliveurl="https://www.showroom-live.com"+$onliveurl
                 Write-Host "*** 配信開始検出 $onlivetitle $onliveurl 開始時刻 $onlivetime"
                 # 配信開始したらブラウザを開く
@@ -93,6 +94,7 @@ while ($loop -eq 0){
             }else{
                 # ロックファイル更新
                 $newfile=New-Item -ItemType File -force $lockfile
+                $tmpout=Add-Content -PassThru $lockfile -Value $onlivetitle
             }
         }
     }
@@ -101,7 +103,9 @@ while ($loop -eq 0){
     Get-ChildItem "$outdir/*.$lockfileext" | ForEach-Object {
         $fileitem=$_
         if($fileitem.LastWriteTime -lt $scriptstartdate){
-            Write-Host "$fileitem は配信終了済"
+            Write-Host "*** 配信終了 " -NoNewline
+            Get-Content -Path $fileitem
+            #Write-Host "$fileitem は配信終了済"
             Remove-Item -Path $fileitem
         }
     }
