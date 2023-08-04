@@ -5,7 +5,7 @@ param(
     [string]$streamlinkcmd="streamlink",
     [string]$quality="worst",
     [string]$lockfileext="showroomlockfile",
-    [int32]$wait=60
+    [int32]$wait=300
 )
 
 #$eventurl="https://www.showroom-live.com/event/beginner_official_vol67"
@@ -76,7 +76,7 @@ while ($loop -eq 0){
                 $onliveurl="https://www.showroom-live.com"+$onliveurl
                 Write-Host "*** 配信開始検出 $onlivetitle URL:$onliveurl 開始時刻:$onlivetime"
                 # 配信開始したらブラウザを開く
-                #Start-Process $onliveurl
+                Start-Process $onliveurl
                 # 配信開始したらstreamlinkで保存を開始
                 #Start-Process -FilePath "streamlink" -ArgumentList $onliveurl,$quality,"--output",$outputfile
             }else{
