@@ -8,6 +8,8 @@ param(
     [int32]$wait=300
 )
 
+$PSDefaultParameterValues['*:Encoding'] = 'utf8'
+
 #$eventurl="https://www.showroom-live.com/event/beginner_official_vol67"
 
 if([Environment]::OSVersion.Platform -eq "Win32NT"){
@@ -52,6 +54,7 @@ while ($loop -eq 0){
     
     # 配信中のリンクには  class="ga-onlive-click" が含まれる
     $flag=0
+    $twittercount=0
     $tmpst=0
     $tmped=0
     $nextst=0
@@ -81,20 +84,39 @@ while ($loop -eq 0){
             $outputfile=$outdir+"/"+$tmp+"-"+$datestr+".mp4"
 
             #Write-Host "$onlivetitle $onliveurl $onlivetime"
+            # 配信開始と新枠チェック
+            $execflag=0
             if(!(Test-Path $lockfile)){
                 # 配信開始検出とロックファイル作成
                 $newfile=New-Item -ItemType File $lockfile
-                $tmpout=Add-Content -PassThru $lockfile -Value $onlivetitle
+                $tmpout=Add-Content -PassThru $lockfile -Value "$onlivetitle $onlivetime" -Encoding UTF8
                 $onliveurl="https://www.showroom-live.com"+$onliveurl
                 Write-Host "*** 配信開始検出 $onlivetitle $onliveurl 開始時刻 $onlivetime"
+                $execflag=1
+            }else{
+                # 枠更新があったか確認
+                $filecontent=Get-Content -Path $lockfile
+                if($filecontent -eq "$onlivetitle $onlivetime"){
+                    # 枠同じなのでロックファイル更新
+                    $newfile=New-Item -ItemType File -force $lockfile
+                    $tmpout=Add-Content -PassThru $lockfile -Value "$onlivetitle $onlivetime" -Encoding UTF8
+                    #Write-Host "same:$onlivetitle $onlivetime"
+                }else{
+                    # 新しい枠になってる場合はコマンドを実行
+                    #Write-Host "new:$onlivetitle $onlivetime"
+                    $execflag=1
+                }
+            }
+            # コマンド実行部分
+            if($execflag -eq 1){
+                # twitter 発言
+                $twittercount=$twittercount+3
+                Write-Host $twittercount,$onlivetitle,"さんが配信しています",$onliveurl
+                #Start-Process -FilePath "./vgarden-twitter-send.py" -ArgumentList $twittercount,$onlivetitle,"さんが配信しています",$onliveurl
                 # 配信開始したらブラウザを開く
                 Start-Process $onliveurl
                 # 配信開始したらstreamlinkで保存を開始
-                #Start-Process -FilePath $streamlinkcmd -ArgumentList $onliveurl,$quality,"--output",$outputfile
-            }else{
-                # ロックファイル更新
-                $newfile=New-Item -ItemType File -force $lockfile
-                $tmpout=Add-Content -PassThru $lockfile -Value $onlivetitle
+                #Start-Process -FilePath "streamlink" -ArgumentList $onliveurl,$quality,"--output",$outputfile
             }
         }
     }
