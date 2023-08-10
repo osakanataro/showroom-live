@@ -12,6 +12,8 @@ param(
 
 $onlivecheckurl="https://www.showroom-live.com/api/live/onlives"
 
+# 調査対象のジャンル
+$searchgenre=107
 # 調査対象のルーム
 $checkrooms=@(
     'ringo-005'     # 林檎
