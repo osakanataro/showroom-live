@@ -30,6 +30,13 @@ if([Environment]::OSVersion.Platform -eq "Win32NT"){
     }
     # Windowsでstreamlink連携が上手くいかない場合に↓を使用
     #$streamlinkcmd="C:\Program Files (x86)\Streamlink\bin\streamlink.exe"
+    # Windows環境で通知を表示する
+    Add-Type -AssemblyName System.Windows.Forms
+    $notification = New-Object System.Windows.Forms.NotifyIcon
+    $notification.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon((Get-Command powershell).Path)
+    $notification.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Info
+    $notification.Visible = $true
+    $notification.BalloonTipTitle = "showroom配信検出"
 }
 
 if ( !(Test-Path -Path $outdir)){
@@ -104,6 +111,11 @@ while ($loop -eq 0){
                     #Start-Process $onliveurl
                     # 配信開始したらstreamlinkで保存を開始
                     #Start-Process -FilePath "streamlink" -ArgumentList $onliveurl,$quality,"--output",$outputfile
+                    # Windowsの場合に通知を表示する
+                    if([Environment]::OSVersion.Platform -eq "Win32NT"){
+                        $notification.BalloonTipText = $onlivetitle+"さんが配信しています"
+                        $notification.ShowBalloonTip(5000)
+                    }
                 }
             }
         }
