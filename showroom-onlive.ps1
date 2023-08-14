@@ -73,7 +73,7 @@ while ($loop -eq 0){
             if($roominfo.room_url_key.IndexOf($checkroom) -eq 0){
                 $onlivetitle=$roominfo.main_name
                 $onliveurl=$roominfo.room_url_key
-                $onlivetime=$roominfo.started_at
+                $onlivetime=Get-Date([datetimeoffset]::FromUnixTimeseconds($roominfo.started_at).localdatetime) -Format f
                 $lockfile=$outdir+"/"+$onliveurl+"."+$lockfileext
                 $datestr=Get-Date -Format "yyyyMMdd-HHmm"
                 $outputfile=$outdir+"/"+$onliveurl+"-"+$datestr+".mp4"
@@ -106,7 +106,7 @@ while ($loop -eq 0){
                     # twitter 発言
                     $twittercount=$twittercount+3
                     Write-Host $twittercount,$onlivetitle,"さんが配信しています",$onliveurl
-                    #Start-Process -FilePath "./vgarden-twitter-send.py" -ArgumentList $twittercount,$onlivetitle,"さんが配信しています",$onliveurl
+                    #Start-Process -FilePath "./vgarden-twitter-send.py" -ArgumentList $twittercount,$onlivetitle,"さんが",$onlivetime,"配信しています",$onliveurl
                     # 配信開始したらブラウザを開く
                     #Start-Process $onliveurl
                     # 配信開始したらstreamlinkで保存を開始
