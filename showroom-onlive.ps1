@@ -66,7 +66,7 @@ while ($loop -eq 0){
     #($response.onlives|where {$_.genre_id -eq $searchgenre}).lives
     #($response.onlives|where {$_.genre_id -eq $searchgenre}).lives | where {($_.room_url_key).indexof("vgarden_") -eq 0}
 
-    ($response.onlives|where {$_.genre_id -eq $searchgenre}).lives | where {
+    ($response.onlives).lives | where {
         $roominfo=$_
         $checkrooms | ForEach-Object{
             $checkroom=$_
