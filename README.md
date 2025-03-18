@@ -45,6 +45,8 @@ Windows10の標準設定ではps1ファイルの直接実行が禁止されて�
 その場合は設定を変更するのではなく、powershellを「-sta -ExecutionPolicy Unrestricted」オプション付きで実行することで回避できるようになります。
 わざわざオプションを毎回変更するは面倒なので、showroom-live-ringo_kujo.bat のような感じでバッチファイルを作って、それを実行するのが簡単でしょう。
 
+もしくはpowwershellスクリプトのショートカットを作成し、リンク先の先頭に「powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File 」を追加する、という手法もあります。
+
 ## 使い方の応用
 VLCには "--sout"オプションというものがあり、受信したデータを再送信する機能があります。
 例えばstremalinkを `streamlink https://www.showroom-live.com/ringo-005 best --player="cvlc --sout '#rtp{sdp=rtsp://:8554/}'"` という感じで実行するとポート8554番でrtspサーバを立てることができます。
